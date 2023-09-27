@@ -11,4 +11,12 @@ router.patch(
   authController.updateProfile
 );
 
+router.post("/organizer_register", authController.handleOrganizerRegister);
+router.post("/organizer", authController.handleOrganizerLogin);
+router.patch(
+  "/organizer-profile",
+  authMiddleware.validateToken,
+  authController.updateOrganizerProfile
+);
+
 module.exports = router;

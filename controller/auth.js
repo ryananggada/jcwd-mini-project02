@@ -2,8 +2,8 @@ require("dotenv").config();
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { User, Profile } = require("../models");
+const { EventOrganizers, OrganizerProfile } = require("../models");
 const jwt = require("jsonwebtoken");
-
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 exports.handleRegister = async (req, res) => {
@@ -163,6 +163,154 @@ exports.updateProfile = async (req, res) => {
     });
   } catch (error) {
     res.status(401).json({
+      ok: false,
+      message: String(error),
+    });
+  }
+};
+
+exports.handleOrganizerRegister = async (req, res) => {
+  const { username, email, password, organizerName, phoneNumber, city } =
+    req.body;
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hashSync(password, salt);
+    const newOrganizer = await EventOrganizers.create({
+      username,
+      organizerName,
+      email,
+      password: hashPassword,
+      isOrganizer: true,
+    });
+
+    const ProfileOrganizer = await OrganizerProfile.create({
+      userId: newOrganizer.id,
+      username,
+      organizerName,
+      phoneNumber,
+      city,
+    });
+
+    res.json({
+      ok: true,
+      data: {
+        username: newOrganizer.username,
+        email: newOrganizer.email,
+        organizerName: ProfileOrganizer.organizerName,
+        phoneNumber: ProfileOrganizer.phoneNumber,
+        city: ProfileOrganizer.city,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ok: false,
+      message: "An error occurred while registering the organizer.",
+    });
+  }
+};
+
+exports.handleOrganizerLogin = async (req, res) => {
+  const { user_identity: userIdentity, password } = req.body;
+
+  try {
+    const organizer = await EventOrganizers.findOne({
+      where: {
+        [Op.or]: [{ username: userIdentity }, { email: userIdentity }],
+      },
+      include: OrganizerProfile,
+    });
+
+    if (!organizer) {
+      res.status(401).json({ ok: false, message: "Incorrect User/Password" });
+      return;
+    }
+
+    console.log(password, organizer.password);
+    const isValid = await bcrypt.compare(password, organizer.password);
+    if (!isValid) {
+      res.status(401).json({ ok: false, message: "Incorrect User/Password" });
+      return;
+    }
+
+    const payload = { id: organizer.id, isVerified: organizer.isVerified };
+    const token = jwt.sign(payload, JWT_SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    const profileData = {
+      email: organizer.email,
+      username: organizer.username,
+      isVerified: organizer.isVerified,
+    };
+
+    if (organizer.OrganizerProfile) {
+      profileData.organizerName = organizer.OrganizerProfile.organizerName;
+      profileData.phoneNumber = organizer.OrganizerProfile.phoneNumber;
+      profileData.city = organizer.OrganizerProfile.city;
+    }
+
+    res.json({
+      ok: true,
+      data: {
+        token,
+        profile: profileData,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, message: "Internal Server Error" });
+  }
+};
+
+exports.updateOrganizerProfile = async (req, res) => {
+  const organizerId = req.user.id;
+  const { email, username, organizerName, phoneNumber, city } = req.body;
+
+  try {
+    const organizer = await EventOrganizers.findOne({
+      where: { id: organizerId },
+    });
+
+    if (!organizer) {
+      res.status(404).json({
+        ok: false,
+        message: "Organizer not found",
+      });
+      return;
+    }
+
+    if (email) {
+      organizer.email = email;
+    }
+    if (username) {
+      organizer.username = username;
+    }
+    if (organizerName) {
+      organizer.organizerName = organizerName;
+    }
+    if (phoneNumber) {
+      organizer.phoneNumber = phoneNumber;
+    }
+    if (city) {
+      organizer.city = city;
+    }
+
+    await organizer.save();
+
+    return res.json({
+      ok: true,
+      data: {
+        email: organizer.email,
+        username: organizer.username,
+        organizerName: organizer.organizerName,
+        phoneNumber: organizer.phoneNumber,
+        city: organizer.city,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
       ok: false,
       message: String(error),
     });
