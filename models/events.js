@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   Events.init(
     {
-      Name: DataTypes.STRING,
-      Description: DataTypes.STRING,
-      Date: DataTypes.STRING,
-      Time: DataTypes.STRING,
-      Venue: DataTypes.STRING,
+      name: DataTypes.STRING,
+      description: DataTypes.STRING,
+      date: DataTypes.STRING,
+      time: DataTypes.STRING,
+      venue: DataTypes.STRING,
       city: DataTypes.STRING,
       poster: DataTypes.STRING,
       category: DataTypes.STRING,
