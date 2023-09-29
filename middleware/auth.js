@@ -1,9 +1,8 @@
-require("dotenv").config();
-
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const { EventOrganizers } = require("../models");
 
-exports.validateToken = (req, res, next) => {
+exports.validateToken = async (req, res, next) => {
   let token = req.headers.authorization;
   if (!token) {
     res.status(401).json({
@@ -28,6 +27,20 @@ exports.validateToken = (req, res, next) => {
       res.status(401).json({
         ok: false,
         message: "Failed to get authorization data",
+      });
+      return;
+    }
+
+    // Check if the user is an organizer
+    const organizer = await EventOrganizers.findOne({
+      where: {
+        isOrganizer: true,
+      },
+    });
+    if (!organizer.isOrganizer) {
+      res.status(403).json({
+        ok: false,
+        message: "Access forbidden. Only organizers can access this route.",
       });
       return;
     }

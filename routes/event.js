@@ -5,14 +5,21 @@ const authController = require("../controller/auth");
 const authMiddleware = require("../middleware/auth");
 
 router.get("/", eventController.handleGetEvents);
-router.post("/eventcreation", eventController.handleEventCreation);
+router.get("/:id", eventController.getEventById);
+router.get("/category/:category", eventController.getEventByCategory);
+router.get("/city/:city", eventController.getEventByCity);
+router.post(
+  "/eventcreation",
+  authMiddleware.validateToken,
+  eventController.handleEventCreation
+);
 
 // for event poster (buggy)
-router.post(
-  "/posterUpload",
-  authMiddleware.validateToken,
-  multerUpload.single("file"),
-  authController.handlePosterUpload
-);
+// router.post(
+//   "/poster_upload",
+//   authMiddleware.validateToken,
+//   multerUpload.single("file"),
+//   authController.handlePosterUpload
+// );
 
 module.exports = router;

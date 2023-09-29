@@ -25,7 +25,7 @@ router.post(
 );
 router.post("/organizer", authController.handleOrganizerLogin);
 router.patch(
-  "/organizer-profile",
+  "/organizer_rofile",
   authMiddleware.validateToken,
   authController.updateOrganizerProfile
 );

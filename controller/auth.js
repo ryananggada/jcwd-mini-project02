@@ -2,7 +2,8 @@ require("dotenv").config();
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { User, Profile } = require("../models");
-const { EventOrganizers, OrganizerProfile } = require("../models");
+const { EventOrganizers } = require("../models");
+const { OrganizerProfile } = require("../models");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -218,7 +219,6 @@ exports.handleOrganizerLogin = async (req, res) => {
       where: {
         [Op.or]: [{ username: userIdentity }, { email: userIdentity }],
       },
-      include: OrganizerProfile,
     });
 
     if (!organizer) {
@@ -244,10 +244,10 @@ exports.handleOrganizerLogin = async (req, res) => {
       isVerified: organizer.isVerified,
     };
 
-    if (organizer.OrganizerProfile) {
-      profileData.organizerName = organizer.OrganizerProfile.organizerName;
-      profileData.phoneNumber = organizer.OrganizerProfile.phoneNumber;
-      profileData.city = organizer.OrganizerProfile.city;
+    if (organizer.profile) {
+      profileData.organizerName = organizer.profile.organizerName;
+      profileData.phoneNumber = organizer.profile.phoneNumber;
+      profileData.city = organizer.profile.city;
     }
 
     res.json({
