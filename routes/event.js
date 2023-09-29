@@ -5,9 +5,12 @@ const authController = require("../controller/auth");
 const authMiddleware = require("../middleware/auth");
 
 router.get("/", eventController.handleGetEvents);
+router.post("/eventcreation", eventController.handleEventCreation);
 router.get("/:id", eventController.getEventById);
 router.get("/category/:category", eventController.getEventByCategory);
 router.get("/city/:city", eventController.getEventByCity);
+
+// for event poster (buggy)
 router.post(
   "/eventcreation",
   authMiddleware.validateToken,
