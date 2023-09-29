@@ -2,11 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class OrganizerProfile extends Model {
-    static associate(models) {
-      OrganizerProfile.belongsTo(models.EventOrganizers, {
-        foreignKey: "organizerId",
-      });
-    }
+    static associate(models) {}
   }
   OrganizerProfile.init(
     {

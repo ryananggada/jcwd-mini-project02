@@ -17,7 +17,6 @@ exports.handleRegister = async (req, res) => {
     phoneNumber,
     city,
   } = req.body;
-
   try {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hashSync(password, salt);

@@ -3,8 +3,8 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const db = require("./models");
-db.sequelize.sync({ alter: true });
+// const db = require("./models");
+// db.sequelize.sync({ alter: true });
 
 const authRouter = require("./routes/auth");
 const eventRouter = require("./routes/event");
