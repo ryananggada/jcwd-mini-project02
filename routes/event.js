@@ -8,11 +8,13 @@ router.get("/", eventController.handleGetEvents);
 router.post("/eventcreation", eventController.handleEventCreation);
 
 // for event poster (buggy)
+/*
 router.post(
   "/posterUpload",
   authMiddleware.validateToken,
   multerUpload.single("file"),
   authController.handlePosterUpload
 );
+*/
 
 module.exports = router;
