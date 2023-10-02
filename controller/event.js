@@ -118,3 +118,15 @@ exports.getEventBySearch = async (req, res) => {
     res.status(500).json({ ok: false, message: error.message });
   }
 };
+
+exports.getEventByOrganizerName = async (req, res) => {
+  const { organizerName } = req.params;
+  try {
+    const event = await Events.findAll({
+      where: { organizerName },
+    });
+    res.json({ ok: true, data: event });
+  } catch (error) {
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};
