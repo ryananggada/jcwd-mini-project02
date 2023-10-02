@@ -8,17 +8,19 @@ router.get("/", eventController.handleGetEvents);
 router.get("/:id", eventController.getEventById);
 router.get("/category/:category", eventController.getEventByCategory);
 router.get("/city/:city", eventController.getEventByCity);
+router.get("/search/:search", eventController.getEventBySearch);
 
 router.post(
   "/eventcreation",
   authMiddleware.validateOrganizerToken,
+  multerUpload.single("poster"),
   eventController.handleEventCreation
 );
 
 // for event poster (buggy)
 // router.post(
 //   "/poster_upload",
-//   authMiddleware.validateOrganizerToken,
+//   authMiddleware.validateToken,
 //   multerUpload.single("file"),
 //   authController.handlePosterUpload
 // );

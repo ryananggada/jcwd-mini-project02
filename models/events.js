@@ -3,7 +3,10 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Events extends Model {
     static associate(models) {
-      Events.hasMany(models.Transaction, { foreignKey: "eventId" });
+      Events.hasMany(models.Transaction, { foreignKey: "couponId" });
+      Events.belongsTo(models.EventOrganizers, {
+        foreignKey: "EventOrganizersId",
+      });
     }
   }
   Events.init(
