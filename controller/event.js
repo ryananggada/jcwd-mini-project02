@@ -130,3 +130,52 @@ exports.getEventByOrganizerName = async (req, res) => {
     res.status(500).json({ ok: false, message: error.message });
   }
 };
+
+exports.handleDeleteEvent = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const event = await Events.destroy({ where: { id } });
+    res.json({ ok: true, data: event, message: "Event deleted" });
+  } catch {
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};
+
+exports.handleEditEvent = async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    description,
+    date,
+    time,
+    venue,
+    city,
+    category,
+    regularTicket,
+    vipTicket,
+  } = req.body;
+  try {
+    const event = await Events.findOne({ where: { id } });
+
+    if (!event) {
+      return res.status(404).json({ ok: false, message: "Event not found" });
+    }
+
+    event.name = name;
+    event.description = description;
+    event.date = date;
+    event.time = time;
+    event.venue = venue;
+    event.city = city;
+    event.category = category;
+    event.regularTicket = regularTicket;
+    event.vipTicket = vipTicket;
+
+    // Save the updated event
+    await event.save();
+
+    res.json({ ok: true, data: event, message: "Event Updated" });
+  } catch (error) {
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};

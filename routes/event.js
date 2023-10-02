@@ -20,12 +20,17 @@ router.post(
   eventController.handleEventCreation
 );
 
-// for event poster (buggy)
-// router.post(
-//   "/poster_upload",
-//   authMiddleware.validateToken,
-//   multerUpload.single("file"),
-//   authController.handlePosterUpload
-// );
+router.delete(
+  "/delete/:id",
+  authMiddleware.validateOrganizerToken,
+  eventController.handleDeleteEvent
+);
+
+router.patch(
+  "/edit/:id",
+  authMiddleware.validateOrganizerToken,
+  multerUpload.single("poster"),
+  eventController.handleEditEvent
+);
 
 module.exports = router;
