@@ -8,6 +8,7 @@ router.get("/", eventController.handleGetEvents);
 router.get("/:id", eventController.getEventById);
 router.get("/category/:category", eventController.getEventByCategory);
 router.get("/city/:city", eventController.getEventByCity);
+router.get("/search/:search", eventController.getEventBySearch);
 
 router.post(
   "/eventcreation",

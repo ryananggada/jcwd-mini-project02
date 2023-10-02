@@ -1,4 +1,5 @@
 const { Events, EventOrganizers } = require("../models");
+const { Op } = require("sequelize");
 
 exports.handleGetEvents = async (req, res) => {
   try {
@@ -93,6 +94,25 @@ exports.getEventByCity = async (req, res) => {
   const { city } = req.params;
   try {
     const event = await Events.findAll({ where: { city } });
+    res.json({ ok: true, data: event });
+  } catch (error) {
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};
+
+exports.getEventBySearch = async (req, res) => {
+  const { search } = req.params;
+  try {
+    const event = await Events.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${search}%` } },
+          { city: { [Op.like]: `%${search}%` } },
+          { venue: { [Op.like]: `%${search}%` } },
+          { description: { [Op.like]: `%${search}%` } },
+        ],
+      },
+    });
     res.json({ ok: true, data: event });
   } catch (error) {
     res.status(500).json({ ok: false, message: error.message });
