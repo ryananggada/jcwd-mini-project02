@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { Coupon } = require("sequelize");
+const { Coupon } = require("../models");
 
 exports.handleAddCoupon = async (req, res) => {
   const { couponCode, discount } = req.body;

@@ -13,7 +13,7 @@ router.post(
 router.post("/", authController.handleLogin);
 router.patch(
   "/profile",
-  authMiddleware.validateToken,
+  authMiddleware.validateUserToken,
   authController.updateProfile
 );
 
@@ -25,8 +25,8 @@ router.post(
 );
 router.post("/organizer", authController.handleOrganizerLogin);
 router.patch(
-  "/organizer_rofile",
-  authMiddleware.validateToken,
+  "/organizer_profile",
+  authMiddleware.validateOrganizerToken,
   authController.updateOrganizerProfile
 );
 

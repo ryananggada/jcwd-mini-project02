@@ -3,7 +3,6 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { User, Profile } = require("../models");
 const { EventOrganizers } = require("../models");
-const { OrganizerProfile } = require("../models");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -76,7 +75,7 @@ exports.handleLogin = async (req, res) => {
       return;
     }
 
-    const payload = { id: user.id, isVerified: user.isVerified };
+    const payload = { id: user.id };
     const token = jwt.sign(payload, JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
@@ -93,7 +92,6 @@ exports.handleLogin = async (req, res) => {
           age: user.Profile.age,
           phoneNumber: user.Profile.phoneNumber,
           city: user.Profile.city,
-          isVerified: user.isVerified,
         },
       },
     });
@@ -181,15 +179,9 @@ exports.handleOrganizerRegister = async (req, res) => {
       organizerName,
       email,
       password: hashPassword,
-      isOrganizer: true,
-    });
-
-    const ProfileOrganizer = await OrganizerProfile.create({
-      userId: newOrganizer.id,
-      username,
-      organizerName,
       phoneNumber,
       city,
+      isOrganizer: true,
     });
 
     res.json({
@@ -197,9 +189,9 @@ exports.handleOrganizerRegister = async (req, res) => {
       data: {
         username: newOrganizer.username,
         email: newOrganizer.email,
-        organizerName: ProfileOrganizer.organizerName,
-        phoneNumber: ProfileOrganizer.phoneNumber,
-        city: ProfileOrganizer.city,
+        organizerName: newOrganizer.organizerName,
+        phoneNumber: newOrganizer.phoneNumber,
+        city: newOrganizer.city,
       },
     });
   } catch (error) {
@@ -242,13 +234,10 @@ exports.handleOrganizerLogin = async (req, res) => {
       email: organizer.email,
       username: organizer.username,
       isVerified: organizer.isVerified,
+      organizerName: organizer.organizerName,
+      phoneNumber: organizer.phoneNumber,
+      city: organizer.city,
     };
-
-    if (organizer.profile) {
-      profileData.organizerName = organizer.profile.organizerName;
-      profileData.phoneNumber = organizer.profile.phoneNumber;
-      profileData.city = organizer.profile.city;
-    }
 
     res.json({
       ok: true,

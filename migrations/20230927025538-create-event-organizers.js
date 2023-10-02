@@ -15,19 +15,16 @@ module.exports = {
       organizerName: {
         type: Sequelize.STRING,
       },
-      password: {
-        type: Sequelize.STRING,
-      },
-      name: {
-        type: Sequelize.STRING,
-      },
       email: {
         type: Sequelize.STRING,
       },
-      address: {
+      password: {
         type: Sequelize.STRING,
       },
-      contact: {
+      phoneNumber: {
+        type: Sequelize.STRING,
+      },
+      city: {
         type: Sequelize.STRING,
       },
       image: {

@@ -2,11 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class EventOrganizers extends Model {
-    static associate(models) {
-      EventOrganizers.hasMany(models.Events, {
-        foreignKey: "EventsId",
-      });
-    }
+    static associate(models) {}
   }
   EventOrganizers.init(
     {
@@ -14,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       organizerName: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      address: DataTypes.STRING,
-      contact: DataTypes.STRING,
+      phoneNumber: DataTypes.STRING,
+      city: DataTypes.STRING,
       image: DataTypes.STRING,
       isOrganizer: DataTypes.BOOLEAN,
     },

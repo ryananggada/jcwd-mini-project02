@@ -11,14 +11,14 @@ router.get("/city/:city", eventController.getEventByCity);
 
 router.post(
   "/eventcreation",
-  authMiddleware.validateToken,
+  authMiddleware.validateOrganizerToken,
   eventController.handleEventCreation
 );
 
 // for event poster (buggy)
 // router.post(
 //   "/poster_upload",
-//   authMiddleware.validateToken,
+//   authMiddleware.validateOrganizerToken,
 //   multerUpload.single("file"),
 //   authController.handlePosterUpload
 // );
