@@ -15,9 +15,17 @@ router.get("/search/:search", eventController.getEventBySearch);
 
 router.post(
   "/eventcreation",
-  authMiddleware.validateToken,
+  authMiddleware.validateOrganizerToken,
   multerUpload.single("poster"),
   eventController.handleEventCreation
 );
+
+// for event poster (buggy)
+// router.post(
+//   "/poster_upload",
+//   authMiddleware.validateToken,
+//   multerUpload.single("file"),
+//   authController.handlePosterUpload
+// );
 
 module.exports = router;

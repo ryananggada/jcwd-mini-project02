@@ -4,7 +4,7 @@ const authMiddleware = require("../middleware/auth");
 
 router.post(
   "/",
-  authMiddleware.validateToken,
+  authMiddleware.validateUserToken,
   transactionController.handleAddTransaction
 );
 

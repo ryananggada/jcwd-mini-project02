@@ -75,7 +75,7 @@ exports.handleLogin = async (req, res) => {
       return;
     }
 
-    const payload = { id: user.id, isVerified: user.isVerified };
+    const payload = { id: user.id };
     const token = jwt.sign(payload, JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
@@ -92,7 +92,6 @@ exports.handleLogin = async (req, res) => {
           age: user.Profile.age,
           phoneNumber: user.Profile.phoneNumber,
           city: user.Profile.city,
-          isVerified: user.isVerified,
         },
       },
     });
@@ -183,6 +182,7 @@ exports.handleOrganizerRegister = async (req, res) => {
       isOrganizer: true,
       phoneNumber,
       city,
+      isOrganizer: true,
     });
 
     res.json({
@@ -193,6 +193,7 @@ exports.handleOrganizerRegister = async (req, res) => {
         organizerName: newOrganizer.organizerName,
         phoneNumber: newOrganizer.phoneNumber,
         city: newOrganizer.city,
+
         isOrganizer: newOrganizer.isOrganizer,
       },
     });
@@ -236,13 +237,10 @@ exports.handleOrganizerLogin = async (req, res) => {
       email: organizer.email,
       username: organizer.username,
       isVerified: organizer.isVerified,
+      organizerName: organizer.organizerName,
+      phoneNumber: organizer.phoneNumber,
+      city: organizer.city,
     };
-
-    if (organizer.profile) {
-      profileData.organizerName = organizer.profile.organizerName;
-      profileData.phoneNumber = organizer.profile.phoneNumber;
-      profileData.city = organizer.profile.city;
-    }
 
     res.json({
       ok: true,

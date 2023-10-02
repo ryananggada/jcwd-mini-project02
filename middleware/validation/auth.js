@@ -12,8 +12,8 @@ exports.validateRegisterUser = [
     minSymbols: 1,
   }),
   body("email").isEmail().withMessage("Email is not valid"),
-  body("firstName").isLength({ min: 5, max: 20 }),
-  body("lastName").isLength({ min: 5, max: 20 }),
+  body("firstName").isLength({ min: 3, max: 20 }),
+  body("lastName").isLength({ min: 3, max: 20 }),
   body("age").isInt({ min: 1, max: 100 }),
   body("phoneNumber").isMobilePhone(),
   body("city").isLength({ min: 5, max: 20 }),
@@ -32,8 +32,8 @@ exports.validateRegisterOrganizer = [
     minSymbols: 1,
   }),
   body("email").isEmail().withMessage("Email is not valid"),
-  body("address").isLength({ min: 5, max: 50 }),
-  body("contact").isLength({ min: 10, max: 12 }).isMobilePhone(),
+  body("city").isLength({ min: 5, max: 20 }),
+  body("phoneNumber").isMobilePhone(),
 ];
 
 exports.registerChecker = (req, res, next) => {
