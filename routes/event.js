@@ -12,15 +12,8 @@ router.get("/city/:city", eventController.getEventByCity);
 router.post(
   "/eventcreation",
   authMiddleware.validateToken,
+  multerUpload.single("poster"),
   eventController.handleEventCreation
 );
-
-// for event poster (buggy)
-// router.post(
-//   "/poster_upload",
-//   authMiddleware.validateToken,
-//   multerUpload.single("file"),
-//   authController.handlePosterUpload
-// );
 
 module.exports = router;

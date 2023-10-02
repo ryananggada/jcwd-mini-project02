@@ -32,12 +32,14 @@ exports.validateToken = async (req, res, next) => {
     }
 
     // Check if the user is an organizer
-    const organizer = await EventOrganizers.findOne({
+    const isOrganizer = await EventOrganizers.findOne({
       where: {
+        id: payload.id,
         isOrganizer: true,
       },
     });
-    if (!organizer.isOrganizer) {
+
+    if (!isOrganizer) {
       res.status(403).json({
         ok: false,
         message: "Access forbidden. Only organizers can access this route.",

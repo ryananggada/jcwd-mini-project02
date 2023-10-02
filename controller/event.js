@@ -7,18 +7,30 @@ exports.handleGetEvents = async (req, res) => {
 };
 
 exports.handleEventCreation = async (req, res) => {
-  const { name, description, date, time, venue, city, poster, category } =
-    req.body;
+  const { filename } = req.file;
+  const {
+    name,
+    description,
+    date,
+    time,
+    venue,
+    city,
+    category,
+    regularTicket,
+    vipTicket,
+  } = req.body;
   try {
     const event = await Events.create({
       name,
+      poster: filename,
       description,
       date,
       time,
       venue,
       city,
-      poster,
       category,
+      regularTicket,
+      vipTicket,
     });
 
     res.json({ ok: true, data: event });

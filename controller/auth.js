@@ -3,7 +3,6 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { User, Profile } = require("../models");
 const { EventOrganizers } = require("../models");
-const { OrganizerProfile } = require("../models");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -182,12 +181,6 @@ exports.handleOrganizerRegister = async (req, res) => {
       email,
       password: hashPassword,
       isOrganizer: true,
-    });
-
-    const ProfileOrganizer = await OrganizerProfile.create({
-      userId: newOrganizer.id,
-      username,
-      organizerName,
       phoneNumber,
       city,
     });
@@ -197,9 +190,10 @@ exports.handleOrganizerRegister = async (req, res) => {
       data: {
         username: newOrganizer.username,
         email: newOrganizer.email,
-        organizerName: ProfileOrganizer.organizerName,
-        phoneNumber: ProfileOrganizer.phoneNumber,
-        city: ProfileOrganizer.city,
+        organizerName: newOrganizer.organizerName,
+        phoneNumber: newOrganizer.phoneNumber,
+        city: newOrganizer.city,
+        isOrganizer: newOrganizer.isOrganizer,
       },
     });
   } catch (error) {
@@ -260,58 +254,5 @@ exports.handleOrganizerLogin = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ ok: false, message: "Internal Server Error" });
-  }
-};
-
-exports.updateOrganizerProfile = async (req, res) => {
-  const organizerId = req.user.id;
-  const { email, username, organizerName, phoneNumber, city } = req.body;
-
-  try {
-    const organizer = await EventOrganizers.findOne({
-      where: { id: organizerId },
-    });
-
-    if (!organizer) {
-      res.status(404).json({
-        ok: false,
-        message: "Organizer not found",
-      });
-      return;
-    }
-
-    if (email) {
-      organizer.email = email;
-    }
-    if (username) {
-      organizer.username = username;
-    }
-    if (organizerName) {
-      organizer.organizerName = organizerName;
-    }
-    if (phoneNumber) {
-      organizer.phoneNumber = phoneNumber;
-    }
-    if (city) {
-      organizer.city = city;
-    }
-
-    await organizer.save();
-
-    return res.json({
-      ok: true,
-      data: {
-        email: organizer.email,
-        username: organizer.username,
-        organizerName: organizer.organizerName,
-        phoneNumber: organizer.phoneNumber,
-        city: organizer.city,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      ok: false,
-      message: String(error),
-    });
   }
 };

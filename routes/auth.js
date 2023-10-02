@@ -24,10 +24,5 @@ router.post(
   authController.handleOrganizerRegister
 );
 router.post("/organizer", authController.handleOrganizerLogin);
-router.patch(
-  "/organizer_rofile",
-  authMiddleware.validateToken,
-  authController.updateOrganizerProfile
-);
 
 module.exports = router;
