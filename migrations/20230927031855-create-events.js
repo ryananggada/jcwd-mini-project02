@@ -39,6 +39,14 @@ module.exports = {
       vipTicket: {
         type: Sequelize.INTEGER,
       },
+      EventOrganizersId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "EventOrganizers",
+          key: "id",
+        },
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

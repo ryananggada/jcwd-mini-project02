@@ -1,9 +1,39 @@
-const { Events } = require("../models");
-const jwt = require("jsonwebtoken");
+const { Events, EventOrganizers } = require("../models");
 
 exports.handleGetEvents = async (req, res) => {
-  const events = await Events.findAll();
-  res.json({ ok: true, data: events });
+  try {
+    const events = await Events.findAll({
+      include: [
+        {
+          model: EventOrganizers,
+          attributes: ["organizerName"],
+        },
+      ],
+    });
+
+    const data = events.map((event) => ({
+      id: event.id,
+      organizerName: event.organizerName,
+      poster: event.poster,
+      description: event.description,
+      date: event.date,
+      time: event.time,
+      venue: event.venue,
+      city: event.city,
+      category: event.category,
+      regularTicket: event.regularTicket,
+      vipTicket: event.vipTicket,
+    }));
+    res.status(200).json({
+      ok: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      message: error.message,
+    });
+  }
 };
 
 exports.handleEventCreation = async (req, res) => {

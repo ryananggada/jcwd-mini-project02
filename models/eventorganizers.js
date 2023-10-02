@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class EventOrganizers extends Model {
     static associate(models) {
       EventOrganizers.hasMany(models.Events, {
-        foreignKey: "EventsId",
+        foreignKey: "EventOrganizersId",
       });
     }
   }
