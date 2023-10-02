@@ -1,41 +1,6 @@
+const e = require("express");
 const { Events, EventOrganizers } = require("../models");
 const { Op } = require("sequelize");
-
-exports.handleGetEvents = async (req, res) => {
-  try {
-    const events = await Events.findAll({
-      include: [
-        {
-          model: EventOrganizers,
-          attributes: ["organizerName"],
-        },
-      ],
-    });
-
-    const data = events.map((event) => ({
-      id: event.id,
-      organizerName: event.organizerName,
-      poster: event.poster,
-      description: event.description,
-      date: event.date,
-      time: event.time,
-      venue: event.venue,
-      city: event.city,
-      category: event.category,
-      regularTicket: event.regularTicket,
-      vipTicket: event.vipTicket,
-    }));
-    res.status(200).json({
-      ok: true,
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      ok: false,
-      message: error.message,
-    });
-  }
-};
 
 exports.handleEventCreation = async (req, res) => {
   const { filename } = req.file;
@@ -62,11 +27,49 @@ exports.handleEventCreation = async (req, res) => {
       category,
       regularTicket,
       vipTicket,
+      EventOrganizersId: req.user.id,
     });
 
     res.json({ ok: true, data: event });
   } catch (error) {
     res.status(500).json({ ok: false, message: error.message });
+  }
+};
+
+exports.handleGetEvents = async (req, res) => {
+  try {
+    const events = await Events.findAll({
+      include: [
+        {
+          model: EventOrganizers,
+          attributes: ["organizerName"],
+        },
+      ],
+    });
+
+    const data = events.map((event) => ({
+      name: event.name,
+      id: event.id,
+      organizerId: event.EventOrganizersId,
+      poster: event.poster,
+      description: event.description,
+      date: event.date,
+      time: event.time,
+      venue: event.venue,
+      city: event.city,
+      category: event.category,
+      regularTicket: event.regularTicket,
+      vipTicket: event.vipTicket,
+    }));
+    res.status(200).json({
+      ok: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      message: error.message,
+    });
   }
 };
 
@@ -120,10 +123,33 @@ exports.getEventBySearch = async (req, res) => {
 };
 
 exports.getEventByOrganizerName = async (req, res) => {
-  const { organizerName } = req.params;
+  const { search } = req.params;
   try {
     const event = await Events.findAll({
-      where: { organizerName },
+      include: [
+        {
+          model: EventOrganizers,
+          where: {
+            organizerName: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+        },
+      ],
+    });
+    res.json({ ok: true, data: event });
+  } catch (error) {
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};
+
+exports.getEventByOrganizerId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const event = await Events.findAll({
+      where: {
+        EventOrganizersId: id,
+      },
     });
     res.json({ ok: true, data: event });
   } catch (error) {

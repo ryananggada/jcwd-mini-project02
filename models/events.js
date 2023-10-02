@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       category: DataTypes.ENUM("music", "webinar", "sports"),
       regularTicket: DataTypes.INTEGER,
       vipTicket: DataTypes.INTEGER,
+      EventOrganizersId: DataTypes.INTEGER,
     },
     {
       sequelize,
