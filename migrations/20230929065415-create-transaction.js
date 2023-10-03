@@ -11,12 +11,24 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
       },
       eventId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "Events",
+          key: "id",
+        },
       },
       couponId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "Coupons",
+          key: "id",
+        },
       },
       totalPrice: {
         type: Sequelize.INTEGER,
