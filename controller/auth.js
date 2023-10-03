@@ -17,6 +17,24 @@ exports.handleRegister = async (req, res) => {
     phoneNumber,
     city,
   } = req.body;
+
+  const existingUser = await User.findOne({
+    where: {
+      [Op.or]: [
+        { username: username },
+        { email: email },
+        { phoneNumber: phoneNumber },
+      ],
+    },
+  });
+
+  if (existingUser) {
+    return res.status(400).json({
+      ok: false,
+      message: "Username, email, or phone number already used",
+    });
+  }
+
   try {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hashSync(password, salt);
@@ -36,7 +54,7 @@ exports.handleRegister = async (req, res) => {
       city,
     });
 
-    res.json({
+    return res.json({
       ok: true,
       data: {
         username: newUser.username,
@@ -46,9 +64,10 @@ exports.handleRegister = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(400).json({
+    console.error(error);
+    return res.status(500).json({
       ok: false,
-      message: String(error),
+      message: "An error occurred while registering the user.",
     });
   }
 };
@@ -171,6 +190,23 @@ exports.handleOrganizerRegister = async (req, res) => {
   const { username, email, password, organizerName, phoneNumber, city } =
     req.body;
 
+  const existingUser = await EventOrganizers.findOne({
+    where: {
+      [Op.or]: [
+        { username: username },
+        { email: email },
+        { phoneNumber: phoneNumber },
+      ],
+    },
+  });
+
+  if (existingUser) {
+    return res.status(400).json({
+      ok: false,
+      message: "Username, email, or phone number already used",
+    });
+  }
+
   try {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hashSync(password, salt);
@@ -182,10 +218,9 @@ exports.handleOrganizerRegister = async (req, res) => {
       isOrganizer: true,
       phoneNumber,
       city,
-      isOrganizer: true,
     });
 
-    res.json({
+    return res.json({
       ok: true,
       data: {
         username: newOrganizer.username,
@@ -193,13 +228,12 @@ exports.handleOrganizerRegister = async (req, res) => {
         organizerName: newOrganizer.organizerName,
         phoneNumber: newOrganizer.phoneNumber,
         city: newOrganizer.city,
-
         isOrganizer: newOrganizer.isOrganizer,
       },
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       ok: false,
       message: "An error occurred while registering the organizer.",
     });
