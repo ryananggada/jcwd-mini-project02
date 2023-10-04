@@ -3,7 +3,7 @@ const { Events, EventOrganizers } = require("../models");
 const { Op } = require("sequelize");
 
 exports.handleEventCreation = async (req, res) => {
-  const { filename } = req.file;
+  //const { filename } = req.file;
   const {
     name,
     description,
@@ -18,7 +18,7 @@ exports.handleEventCreation = async (req, res) => {
   try {
     const event = await Events.create({
       name,
-      poster: filename,
+      poster: null,
       description,
       date,
       time,
