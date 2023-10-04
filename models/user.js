@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasOne(models.Profile, { foreignKey: "userId" });
       User.hasMany(models.Transaction, { foreignKey: "userId" });
+      User.belongsTo(models.Referral, { foreignKey: "referralId" });
     }
   }
   User.init(
@@ -12,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       username: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
+      age: DataTypes.INTEGER,
+      phoneNumber: DataTypes.STRING,
+      city: DataTypes.STRING,
+      ReferralId: DataTypes.INTEGER,
     },
     {
       sequelize,

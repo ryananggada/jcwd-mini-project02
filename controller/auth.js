@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
-const { User, Profile } = require("../models");
+const { User, Profile, Referral } = require("../models");
 const { EventOrganizers } = require("../models");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -38,17 +38,30 @@ exports.handleRegister = async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hashSync(password, salt);
+    const referralCode = username + Math.floor(Math.random() * 1000);
+    const referrals = await Referral.create({
+      code: referralCode,
+    });
 
     const newUser = await User.create({
       username,
       email,
       password: hashPassword,
+      ReferralId: referrals.id,
+      referralCode: referralCode,
+      firstName: firstName,
+      lastName: lastName,
+      age: age,
+      phoneNumber: phoneNumber,
+      city: city,
     });
 
     const newProfile = await Profile.create({
       userId: newUser.id,
       firstName,
       lastName,
+      ReferralId: referrals.id,
+      referralCode: referralCode,
       age,
       phoneNumber,
       city,
@@ -61,6 +74,8 @@ exports.handleRegister = async (req, res) => {
         email: newUser.email,
         firstName: newProfile.firstName,
         lastName: newProfile.lastName,
+        ReferralId: referrals.id,
+        referralCode: referralCode,
       },
     });
   } catch (error) {

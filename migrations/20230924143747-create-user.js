@@ -19,9 +19,32 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      firstName: {
+        type: Sequelize.STRING,
+      },
+      lastName: {
+        type: Sequelize.STRING,
+      },
+      age: {
+        type: Sequelize.INTEGER,
+      },
+      phoneNumber: {
+        type: Sequelize.STRING,
+      },
+      city: {
+        type: Sequelize.STRING,
+      },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      ReferralId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "Referrals",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,
