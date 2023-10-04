@@ -7,25 +7,22 @@ const authMiddleware = require("../middleware/auth");
 router.get("/all", eventController.handleGetEvents);
 
 // get events by event id
-router.get("/search/:id", eventController.getEventById);
+router.get("/:id", eventController.getEventById);
 
 // get events by category
-router.get("/search/category/:category", eventController.getEventByCategory);
+router.get("/category/:category", eventController.getEventByCategory);
 
 // get events by city
-router.get("/search/city/:city", eventController.getEventByCity);
+router.get("/city/:city", eventController.getEventByCity);
 
 // get events by keyword
 router.get("/search/:search", eventController.getEventBySearch);
 
 // get events by organizer id
-router.get("/search/organizerid/:id", eventController.getEventByOrganizerId);
+router.get("/organizerid/:id", eventController.getEventByOrganizerId);
 
 // get events by organizer name
-router.get(
-  "/search/organizer/:search",
-  eventController.getEventByOrganizerName
-);
+router.get("/organizer/:search", eventController.getEventByOrganizerName);
 
 // event creation route
 router.post(
