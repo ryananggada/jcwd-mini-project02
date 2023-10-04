@@ -20,14 +20,18 @@ exports.handleRegister = async (req, res) => {
 
   const existingUser = await User.findOne({
     where: {
-      [Op.or]: [{ username: username }, { email: email }],
+      [Op.or]: [
+        { username: username },
+        { email: email },
+        { phoneNumber: phoneNumber },
+      ],
     },
   });
 
   if (existingUser) {
     return res.status(400).json({
       ok: false,
-      message: "Username or email already used",
+      message: "Username, email, or phone number already used",
     });
   }
 
