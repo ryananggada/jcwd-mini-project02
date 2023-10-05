@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       city: DataTypes.STRING,
       ReferralId: DataTypes.INTEGER,
       referralPoint: DataTypes.INTEGER,
+      isOrganizer: DataTypes.BOOLEAN,
     },
     {
       sequelize,

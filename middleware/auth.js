@@ -77,7 +77,8 @@ exports.validateOrganizerToken = async (req, res, next) => {
         isOrganizer: true,
       },
     });
-    if (isOrganizer === null || !isOrganizer.isOrganizer) {
+
+    if (!isOrganizer) {
       res.status(403).json({
         ok: false,
         message: "Access forbidden. Only organizers can access this route.",
@@ -85,6 +86,7 @@ exports.validateOrganizerToken = async (req, res, next) => {
       return;
     }
 
+    // Set the user object in the request
     req.user = payload;
     next();
   } catch (error) {

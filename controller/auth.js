@@ -54,6 +54,7 @@ exports.handleRegister = async (req, res) => {
       age: age,
       phoneNumber: phoneNumber,
       city: city,
+      isOrganizer: false,
     });
 
     const newProfile = await Profile.create({
@@ -76,6 +77,7 @@ exports.handleRegister = async (req, res) => {
         lastName: newProfile.lastName,
         ReferralId: referrals.id,
         referralCode: referralCode,
+        isOrganizer: newUser.isOrganizer,
       },
     });
   } catch (error) {
