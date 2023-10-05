@@ -2,6 +2,7 @@ const router = require("express").Router();
 const eventController = require("../controller/event");
 const { multerUpload } = require("../lib/multer");
 const authMiddleware = require("../middleware/auth");
+const validateEvent = require("../middleware/validation/event");
 
 // get all events
 router.get("/all", eventController.handleGetEvents);
@@ -27,8 +28,10 @@ router.get("/organizer/:search", eventController.getEventByOrganizerName);
 // event creation route
 router.post(
   "/eventcreation",
-  authMiddleware.validateOrganizerToken,
   multerUpload.single("poster"),
+  authMiddleware.validateOrganizerToken,
+  validateEvent.validateEventCreation,
+  validateEvent.eventCreationChecker,
   eventController.handleEventCreation
 );
 
